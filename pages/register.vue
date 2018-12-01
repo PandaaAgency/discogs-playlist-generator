@@ -61,9 +61,9 @@
     data() {
       return {
         form: {
-          email: 'florian@pandaa.fr',
-          password: 'test',
-          passwordConfirmation: 'test',
+          // email: 'florian@pandaa.fr',
+          // password: 'test',
+          // passwordConfirmation: 'test',
         },
       }
     },

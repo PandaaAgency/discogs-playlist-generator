@@ -6,7 +6,7 @@ const bodyParser = require('body-parser'); // add req.body
 const session = require('express-session'); // sessions
 const MongoStore = require('connect-mongo')(session); // sessions to mongo
 const mongoose = require('mongoose'); // mongodb nodejs
-require('dotenv').config() // dotenv
+require('dotenv').config(); // dotenv
 
 
 /**
@@ -29,6 +29,7 @@ const routes = require('./routes');
 
 // setup mongodb
 mongoose.connect('mongodb://localhost/test-app');
+mongoose.Promise = Promise;
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', () => {
