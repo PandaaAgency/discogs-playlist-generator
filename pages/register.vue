@@ -32,6 +32,19 @@
               </b-form-input>
             </b-form-group>
 
+            <b-form-group id="password-confirmation-group"
+                          label="Password Confirmation :"
+                          label-for="password-confirmation">
+              <b-form-input id="password-confirmation"
+                            type="password"
+                            v-model="form.passwordConfirmation"
+                            required
+              >
+              </b-form-input>
+            </b-form-group>
+
+
+
             <b-button type="submit" variant="primary">Submit</b-button>
           </b-form>
 
@@ -50,15 +63,17 @@
         form: {
           email: 'florian@pandaa.fr',
           password: 'test',
+          passwordConfirmation: 'test',
         },
       }
     },
     methods: {
         login(evt) {
          evt.preventDefault();
-         this.$axios.post('/api/login', {
+         this.$axios.post('/auth/register', {
            email: this.form.email,
-           password: this.form.password
+           password: this.form.password,
+           passwordConfirmation: this.form.passwordConfirmation
          }).then((response) => {
              this.$store.commit('user/setUser', response.data)
            this.$router.replace({ path: '/' })

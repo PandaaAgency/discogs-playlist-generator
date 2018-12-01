@@ -1,75 +1,74 @@
 const express = require('express');
 
 const router = express.Router();
+const Discogs = require('disconnect').Client;
 const User = require('../models/user');
 
-/**
- * Login Route
- */
-router.post('/login', (req, res, next) => {
-  /** Log user * */
-  User.authenticate(req.body.email, req.body.password).then((user) => {
-    /** Put user to session * */
-    req.session.user = {
-      id: user._id,
-      username: user.username,
-      email: user.email,
-      token: user.token || null,
-      tokenSecret: user.tokenSecret || null,
-      discogs: user.token != null && user.tokenSecret != null,
+
+router.get('/authorize', (req, res, next) => {
+  /** Init oauth discogs * */
+  const oAuth = new Discogs().oauth();
+  console.log(oAuth);
+
+  /** Get request token & redirect to authorize url * */
+  oAuth.getRequestToken(
+    process.env.DISCOGS_CONSUMER_KEY,
+    process.env.DISCOGS_CONSUMER_SECRET,
+    'http://localhost:3000/auth/discogs/callback',
+    (err, requestData) => {
+      if (err !== null) {
+        next(err);
+      }
+
+      req.session.requestData = requestData;
+      res.redirect(requestData.authorizeUrl);
+    },
+  );
+});
+
+
+router.get('/callback', (req, res, next) => {
+  /** Init oauth discogs * */
+  const oAuth = new Discogs(req.session.requestData).oauth();
+
+
+  oAuth.getAccessToken(req.query.oauth_verifier, async (err, accessData) => {
+    req.session.requestData = null; // reset request data
+
+    /** Get discogs client & find user in db * */
+    const discogs = new Discogs(accessData);
+    const user = await User.findById(req.session.user.id);
+
+    /** Error if no user * */
+    if (user === null) {
+      throw new Error('User not found');
+    }
+
+    /** Get username from discogs * */
+    const identity = await discogs.getIdentity();
+
+    /** What you want to update * */
+    const updatedUser = {
+      token: accessData.token,
+      tokenSecret: accessData.tokenSecret,
+      accessData: accessData.token,
+      username: identity.username,
     };
 
-    /** Return json user * */
-    return res.json(req.session.user);
-  }).catch(next);
-  /**  Errors will be passed to Express.* */
-});
 
+    /** Update db user * */
+    user.set(updatedUser);
 
-/**
- * Create user
- */
-router.post('/register', (req, res, next) => {
-  /** Password Mismatched * */
-  if (req.body.password !== req.body.passwordConfirmation) {
-    throw new Error('Passwords do not match');
-  }
+    /** Update session user * */
+    req.session.user = {
+      ...req.session.user,
+      ...updatedUser,
+      discogs: true,
+    };
 
-  /** Missing values * */
-  if (!req.body.email || !req.body.password || !req.body.passwordConfirmation) {
-    throw new Error('All fields have to be filled out');
-  }
-
-  const userData = {
-    email: req.body.email,
-    password: req.body.password,
-    token: null,
-    tokenSecret: null,
-  };
-
-  /** Create user * */
-  User.create(userData).then(() => res.redirect('/')).catch(next);
-});
-
-
-/**
- * Logout route
- */
-router.get('/logout', (req, res, next) => {
-  /** If session exists * */
-  if (req.session) {
-    /** Try to destroy it * */
-    req.session.destroy((err) => {
-      /** Throw Error * */
-      if (err) {
-        return next(err);
-      }
-      /**
-       * Redirect to home
-       */
-      return res.redirect('/');
-    });
-  }
+    /** Save user & redirect * */
+    user.save().then(() => res.redirect('/')).catch(next);
+  });
 });
 
 module.exports = router;
