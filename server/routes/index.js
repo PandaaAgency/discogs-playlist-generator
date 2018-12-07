@@ -1,15 +1,11 @@
-const express = require('express');
+const express = require('express')
 
-const router = express.Router();
-
-/** Import discogs routes * */
-router.use('/discogs', require('./discogs'));
+const router = express.Router()
 
 /** Import auth routes * */
-router.use('/auth', require('./authentication'));
+router.use('/auth', require('./authentication'))
 
 /** Import discogs auth routes * */
-router.use('/auth/discogs', require('./authentication-discogs'));
+router.use('/auth/discogs', require('./authentication-discogs'))
 
-
-module.exports = router;
+module.exports = router

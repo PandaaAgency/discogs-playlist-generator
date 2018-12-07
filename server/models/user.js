@@ -1,5 +1,5 @@
-const mongoose = require('mongoose');
-const bcrypt = require('bcrypt');
+const mongoose = require('mongoose')
+const bcrypt = require('bcrypt')
 
 /**
  * Define model format
@@ -9,53 +9,51 @@ const UserSchema = new mongoose.Schema({
     type: String,
     unique: true,
     required: true,
-    trim: true,
+    trim: true
   },
   username: {
     type: String,
     unique: false,
     required: false,
-    trim: true,
+    trim: true
   },
   token: {
     type: String,
     unique: true,
     required: false,
-    trim: true,
+    trim: true
   },
   tokenSecret: {
     type: String,
     unique: true,
     required: false,
-    trim: true,
+    trim: true
   },
   password: {
     type: String,
-    required: true,
-  },
-});
-
+    required: true
+  }
+})
 
 /**
  * Hash Password if modified
  */
 UserSchema.pre('save', function (next) {
-  const user = this;
+  const user = this
 
   /**
    * Next if password unchanged
    */
   if (!user.isModified('password')) {
-    return next();
+    return next()
   }
 
   return bcrypt.hash(user.password, 10).then((hash) => {
     /** Hash password * */
-    user.password = hash;
-    return next();
-  }).catch(error => next(error));
-});
-
+    user.password = hash
+    return next()
+  }).catch(error => next(error))
+})
 
 /**
  * Authenticate user
@@ -66,24 +64,23 @@ UserSchema.pre('save', function (next) {
 UserSchema.statics.authenticate = (email, password) => User.findOne({ email }).exec()
   .then(async (user) => {
     if (user === null) {
-      throw new Error('User not found');
+      throw new Error('User not found')
     }
 
     /** Compare password * */
-    const passwordMatch = await bcrypt.compare(password, user.password);
+    const passwordMatch = await bcrypt.compare(password, user.password)
 
     if (!passwordMatch) {
-      throw new Error('Password not good not found');
+      throw new Error('Password not good not found')
     }
 
-    return user;
-  });
-
+    return user
+  })
 
 /**
  * Add to mongoose
  * @type {Model}
  */
-const User = mongoose.model('User', UserSchema);
+const User = mongoose.model('User', UserSchema)
 
-module.exports = User;
+module.exports = User

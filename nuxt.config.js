@@ -1,4 +1,4 @@
-const pkg = require('./package');
+const pkg = require('./package')
 
 module.exports = {
   mode: 'universal',
@@ -11,9 +11,9 @@ module.exports = {
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { hid: 'description', name: 'description', content: pkg.description },
+      { hid: 'description', name: 'description', content: pkg.description }
     ],
-    link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
+    link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }]
   },
 
   /*
@@ -32,6 +32,10 @@ module.exports = {
   plugins: [
     '~/plugins/services',
     '~/plugins/vue-snotify',
+    {
+      src: '~/plugins/vue-socket-io',
+      ssr: false
+    }
   ],
 
   /*
@@ -42,12 +46,11 @@ module.exports = {
     '@nuxtjs/axios',
     // '@nuxtjs/toast',
     // Doc: https://bootstrap-vue.js.org/docs/
-    'bootstrap-vue/nuxt',
+    'bootstrap-vue/nuxt'
   ],
 
-
   toast: {
-    position: 'top-center',
+    position: 'top-center'
   },
   /*
   Server middleware
@@ -63,7 +66,7 @@ module.exports = {
   axios: {
     // See https://github.com/nuxt-community/axios-module#options
     proxyHeaders: false,
-    credentials: false,
+    credentials: false
   },
 
   /*
@@ -84,5 +87,5 @@ module.exports = {
     //   })
     // }
     // },
-  },
-};
+  }
+}
