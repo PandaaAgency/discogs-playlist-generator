@@ -8,8 +8,8 @@ module.exports = {
     parser: 'babel-eslint'
   },
   extends: [
-    'plugin:vue/recommended',
-    'airbnb-base'
+    'plugin:vue/essential',
+    'standard'
     // 'plugin:prettier/recommended'
   ],
   // required to lint *.vue files
@@ -21,18 +21,13 @@ module.exports = {
   rules: {
     'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'off',
     'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
-    'no-underscore-dangle': [
-      'error',
-      {
-        allow: ['_id']
-      }
-    ],
-    'no-shadow': [
-      'error',
-      {
-        allow: ['state']
-      }
-    ],
+    "indent": "error",
+    // specify curly brace conventions for all control statements
+    "curly": ["error", "all"],
+    "brace-style": ["error", '1tbs', {
+      "allowSingleLine": false
+    }],
+    'max-len': ["error", 120, 4]
 
 
   }
