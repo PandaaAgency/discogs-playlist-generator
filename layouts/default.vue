@@ -1,25 +1,33 @@
 <template>
   <div>
-    <b-navbar toggleable="md" fixed="top">
+    <b-navbar
+      toggleable="md"
+      fixed="top">
 
-      <b-navbar-toggle target="nav_collapse"></b-navbar-toggle>
+      <b-navbar-toggle target="nav_collapse"/>
 
       <b-navbar-brand to="/">
         <img src="~/assets/images/logo.png">
       </b-navbar-brand>
 
-      <b-collapse is-nav id="nav_collapse">
-
+      <b-collapse
+        is-nav
+        id="nav_collapse">
 
         <!-- Right aligned nav items -->
         <b-navbar-nav class="ml-auto">
 
           <!--<b-nav-item to="/">Home</b-nav-item>-->
-          <b-nav-item v-b-modal.login-modal v-if="!isLogged">Login</b-nav-item>
-          <b-nav-item v-b-modal.register-modal v-if="!isLogged">Register</b-nav-item>
+          <b-nav-item
+            v-b-modal.login-modal
+            v-if="!isLogged">Login</b-nav-item>
+          <b-nav-item
+            v-b-modal.register-modal
+            v-if="!isLogged">Register</b-nav-item>
 
-
-          <b-nav-item-dropdown right v-if="isLogged">
+          <b-nav-item-dropdown
+            right
+            v-if="isLogged">
 
             <!-- Using button-content slot -->
             <template slot="button-content">
@@ -29,18 +37,15 @@
           </b-nav-item-dropdown>
         </b-navbar-nav>
 
-
-
       </b-collapse>
     </b-navbar>
 
     <!-- navbar-1.vue -->
-    <vue-snotify></vue-snotify>
+    <vue-snotify/>
     <nuxt/>
 
-
-    <login-modal></login-modal>
-    <register-modal></register-modal>
+    <login-modal/>
+    <register-modal/>
 
   </div>
 </template>
@@ -76,23 +81,23 @@
 </style>
 
 <script>
-  import {mapGetters, mapState} from 'vuex'
-  import LoginModal from '~/components/LoginModal.vue'
-  import RegisterModal from '~/components/RegisterModal.vue'
+import { mapGetters, mapState } from 'vuex'
+import LoginModal from '~/components/LoginModal.vue'
+import RegisterModal from '~/components/RegisterModal.vue'
 
-  export default {
-    components: {
-      LoginModal,
-      RegisterModal
-    },
-    computed: {
-      ... mapState({
-        user: state => state.user,
-      }),
-      ... mapGetters({
-        isLogged: 'user/isLogged',
-      })
+export default {
+  components: {
+    LoginModal,
+    RegisterModal
+  },
+  computed: {
+    ...mapState({
+      user: state => state.user
+    }),
+    ...mapGetters({
+      isLogged: 'user/isLogged'
+    })
 
-    }
   }
+}
 </script>

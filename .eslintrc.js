@@ -8,14 +8,12 @@ module.exports = {
     parser: 'babel-eslint'
   },
   extends: [
-    'plugin:vue/essential',
+    'plugin:vue/strongly-recommended',
     'standard'
     // 'plugin:prettier/recommended'
   ],
-  // required to lint *.vue files
   plugins: [
     'vue',
-    // 'prettier'
   ],
   // add your custom rules here
   rules: {
@@ -28,8 +26,6 @@ module.exports = {
       "allowSingleLine": false
     }],
     'max-len': ["error", 120, 4]
-
-
   }
 }
 

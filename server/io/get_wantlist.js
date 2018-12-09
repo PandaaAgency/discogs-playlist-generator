@@ -10,7 +10,6 @@ exports = module.exports = function (io) {
     socket.on('get_wantlist', () => {
       consola.info('[SOCKET] GET WANTLIST')
 
-
       // discogs api client
       const discogsApi = new DisogsApi(
         socket.request.session.user.username,
@@ -30,7 +29,7 @@ exports = module.exports = function (io) {
         consola.info(`[SOCKET]${existingRelease.length} existing release in DB`)
         existingRelease.map((release) => {
           socket.request.session.user.playlist.push(release)
-          socket.request.session.save();
+          socket.request.session.save()
           socket.emit('updatePlaylist', release)
         })
 
@@ -62,7 +61,7 @@ exports = module.exports = function (io) {
           if (createdRelease) {
             // emit to the front
             socket.request.session.user.playlist.push(release)
-            socket.request.session.save();
+            socket.request.session.save()
             socket.emit('updatePlaylist', createdRelease)
           }
         })

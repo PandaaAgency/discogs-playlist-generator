@@ -10,7 +10,6 @@ const port = process.env.PORT || 3000
 const bodyParser = require('body-parser') // add req.body
 const session = require('express-session') // sessions
 
-
 const MongoStore = require('connect-mongo')(session) // sessions to mongo
 const mongoose = require('mongoose') // mongodb nodejs
 require('dotenv').config() // dotenv
@@ -59,7 +58,6 @@ const sessionInstance = session({
 server.listen(80)
 const io = require('socket.io')(server)
 
-
 /** get wantlist by socket.io **/
 require('./io/get_wantlist')(io)
 io.on('connection', (socket) => {
@@ -84,9 +82,9 @@ async function start () {
      */
   app.use(sessionInstance)
 
-  io.use(function(socket, next) {
-    sessionInstance(socket.request, socket.request.res, next);
-  });
+  io.use(function (socket, next) {
+    sessionInstance(socket.request, socket.request.res, next)
+  })
 
   /**
      * Custom routes

@@ -1,9 +1,14 @@
 <template>
   <section class="player-sidebar">
     <b-col md="3">
-      <vue2-scroll-bar classes="scrollbar" ref="Scrollbar">
+      <vue2-scroll-bar
+        classes="scrollbar"
+        ref="Scrollbar">
         <aside>
-          <sidebar-item v-for="video in wantlist" v-bind:item="video" :key="video.id"></sidebar-item>
+          <sidebar-item
+            v-for="video in wantlist"
+            :item="video"
+            :key="video.id"/>
         </aside>
       </vue2-scroll-bar>
     </b-col>
@@ -24,7 +29,6 @@
       }
 
     }
-
 
   }
 
@@ -47,10 +51,11 @@
     overflow: hidden;
     position: relative;
     background: white;
-  }
-
-  .vue-scrollbar__wrapper:hover .vue-scrollbar__scrollbar-vertical, .vue-scrollbar__wrapper:hover .vue-scrollbar__scrollbar-horizontal {
-    opacity: 1;
+    &:hover {
+      .vue-scrollbar__scrollbar-vertical, .vue-scrollbar__scrollbar-horizontal {
+        opacity: 1;
+      }
+    }
   }
 
   .vue-scrollbar__scrollbar-vertical, .vue-scrollbar__scrollbar-horizontal {
@@ -74,10 +79,9 @@
     height: 100%;
     top: 0;
     right: 0;
-  }
-
-  .vue-scrollbar__scrollbar-vertical .scrollbar {
-    width: 10px;
+    .scrollbar {
+      width: 10px;
+    }
   }
 
   .vue-scrollbar__scrollbar-horizontal {
@@ -85,39 +89,36 @@
     width: 100%;
     bottom: 0;
     right: 0;
+    .scrollbar {
+      height: 10px;
+    }
   }
-
-  .vue-scrollbar__scrollbar-horizontal .scrollbar {
-    height: 10px;
-  }
-
 </style>
 
 <script>
-  import {mapGetters} from 'vuex'
-  import SidebarItem from '~/components/Player/SidebarItem.vue'
-  import Vue2ScrollBar from 'vue2-scrollbar'
+import { mapGetters } from 'vuex'
+import SidebarItem from '~/components/Player/SidebarItem.vue'
+import Vue2ScrollBar from 'vue2-scrollbar'
 
-
-  export default {
-    components: {
-      SidebarItem,
-      Vue2ScrollBar
-    },
-    data() {
-      return {}
-    },
-    methods: {
-      reset() {
-        // this.$store.commit('user/setUser', response.data)
-      },
-    },
-    computed: {
-      ...mapGetters({
-        isLogged: 'user/isLogged',
-        hasDiscogs: 'user/hasDiscogs',
-        wantlist: 'wantlist/getWantlist',
-      })
+export default {
+  components: {
+    SidebarItem,
+    Vue2ScrollBar
+  },
+  data () {
+    return {}
+  },
+  methods: {
+    reset () {
+      // this.$store.commit('user/setUser', response.data)
     }
+  },
+  computed: {
+    ...mapGetters({
+      isLogged: 'user/isLogged',
+      hasDiscogs: 'user/hasDiscogs',
+      wantlist: 'wantlist/getWantlist'
+    })
   }
+}
 </script>
