@@ -4,32 +4,33 @@ const consola = require('consola') // console output
 var cookieParser = require('cookie-parser')
 var parseCookie = cookieParser('super-secret-key')
 
-exports = module.exports = function (io, storeMongo) {
+exports = module.exports = function (io) {
   io.sockets.on('connection', (socket) => {
     // ask for wantlist
     socket.on('get_wantlist', () => {
       consola.info('[SOCKET] GET WANTLIST')
 
+
       // discogs api client
       const discogsApi = new DisogsApi(
-        socket.handshake.session.user.username,
-        socket.handshake.session.user.token,
-        socket.handshake.session.user.tokenSecret
+        socket.request.session.user.username,
+        socket.request.session.user.token,
+        socket.request.session.user.tokenSecret
       )
 
       // init session playlist
-      socket.handshake.session.user.playlist = []
+      socket.request.session.user.playlist = []
 
       // Get wantlist from discogs and compare what's wissing in db
-      discogsApi.getWantlist(5, 1).then(data => Release.find({
+      discogsApi.getWantlist(15, 1).then(data => Release.find({
         discogs_id: {
           $in: data.map(release => release.id)
         }
       }).then((existingRelease) => { // send existing release to front
         consola.info(`[SOCKET]${existingRelease.length} existing release in DB`)
         existingRelease.map((release) => {
-          socket.handshake.session.user.playlist.push(release)
-          storeMongo.set(socket.request.signedCookies['connect.sid'], socket.handshake.session)
+          socket.request.session.user.playlist.push(release)
+          socket.request.session.save();
           socket.emit('updatePlaylist', release)
         })
 
@@ -60,8 +61,8 @@ exports = module.exports = function (io, storeMongo) {
         }).then((createdRelease) => {
           if (createdRelease) {
             // emit to the front
-            socket.handshake.session.user.playlist.push(release)
-            storeMongo.set(socket.request.signedCookies['connect.sid'], socket.handshake.session)
+            socket.request.session.user.playlist.push(release)
+            socket.request.session.save();
             socket.emit('updatePlaylist', createdRelease)
           }
         })

@@ -10,8 +10,6 @@ const port = process.env.PORT || 3000
 const bodyParser = require('body-parser') // add req.body
 const session = require('express-session') // sessions
 
-// var sharedSession = require('express-socket.io-session')
-var cookieParser = require('cookie-parser')
 
 const MongoStore = require('connect-mongo')(session) // sessions to mongo
 const mongoose = require('mongoose') // mongodb nodejs
@@ -50,8 +48,8 @@ const storeMongo = new MongoStore({
 
 const sessionInstance = session({
   secret: 'super-secret-key',
-  resave: true,
-  saveUninitialized: true,
+  resave: false,
+  saveUninitialized: false,
   store: storeMongo
 })
 
@@ -60,27 +58,10 @@ const sessionInstance = session({
  */
 server.listen(80)
 const io = require('socket.io')(server)
-/** use express session in socket **/
-io.use(function (socket, next) {
-  var parseCookie = cookieParser('super-secret-key')
-  var handshake = socket.request
-  parseCookie(handshake, null, function (err, data) {
-    storeMongo.get(handshake.signedCookies['connect.sid'], function (err, session) {
-      if (err) {
-        next(new Error(err.message))
-      }
-      if (!session) {
-        next(new Error('Not authorized'))
-      }
 
-      socket.handshake.session = session
-      next()
-    })
-  })
-})
 
 /** get wantlist by socket.io **/
-require('./io/get_wantlist')(io, storeMongo)
+require('./io/get_wantlist')(io)
 io.on('connection', (socket) => {
   consola.info('Socket connecion')
 })
@@ -97,15 +78,15 @@ async function start () {
      */
   app.use(bodyParser.json())
   app.use(bodyParser.urlencoded({ extended: false }))
-  app.use(cookieParser('super-secret-key'))
 
   /**
      * Sessions to create `req.session` and save to mongo
      */
   app.use(sessionInstance)
-  // io.use(sharedSession(sessionInstance, {
-  //   autoSave:true
-  // }));
+
+  io.use(function(socket, next) {
+    sessionInstance(socket.request, socket.request.res, next);
+  });
 
   /**
      * Custom routes

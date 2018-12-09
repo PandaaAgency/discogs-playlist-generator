@@ -1,64 +1,190 @@
 <template>
 
   <b-container fluid>
-    <b-row v-if="!isLogged">
-      <b-col>
-        <h2>
-          <nuxt-link to="login">
-            Please login to use our service
-          </nuxt-link>
-        </h2>
-      </b-col>
+
+    <b-row>
+
+      <section id="presentation">
+        <b-container fluid>
+          <!-- offline -->
+          <b-row class="text-center " v-if="!isLogged" align-v="center">
+            <b-col md="8" offset-md="2">
+              <h2>Step 1</h2>
+              <h1>
+                Synchronize your discogs wantlist and turn it into a wonderful listenable playlist
+              </h1>
+
+              <b-button v-b-modal.login-modal variant="primary">
+                Login
+              </b-button>
+            </b-col>
+          </b-row>
+
+          <!-- no discogs linked -->
+          <b-row class="text-center" v-if="isLogged && !hasDiscogs" align-v="center">
+            <b-col md="8" offset-md="2">
+              <h2>Step 2</h2>
+              <h1>
+                Please connect your discogs account in order to synchronise your wantlist.
+              </h1>
+
+              <b-button href="/auth/discogs/authorize" variant="primary">
+                Authorize
+              </b-button>
+            </b-col>
+          </b-row>
+
+
+          <!-- Let's go -->
+          <b-row class="text-center" v-if="wantlist.length <= 0" align-v="center">
+            <b-col md="8" offset-md="2">
+              <h2>Last ... but not least</h2>
+              <h1>
+                Everything's ready, generate my playlist please
+              </h1>
+
+              <b-button @click="generatePlaylist()" variant="primary">
+                I want to listen to awesome music
+              </b-button>
+
+              <li v-for="video in wantlist">
+                <h1>{{ video.url}}</h1>
+              </li>
+              </ul>
+            </b-col>
+          </b-row>
+
+
+          <!-- playlist part, @todo component -->
+          <b-row class="text-center" v-if="wantlist.length > 0" align-v="center">
+            <player></player>
+            <!--<b-col md="8" offset-md="2">-->
+
+              <!--<ul>-->
+              <!--<li v-for="video in wantlist">-->
+                <!--<h1>{{ video.url}}</h1>-->
+              <!--</li>-->
+              <!--</ul>-->
+            <!--</b-col>-->
+          </b-row>
+
+        </b-container>
+      </section>
     </b-row>
 
-    <b-row v-if="isLogged && !hasDiscogs">
-      <b-col>
-      <h2>
-        <a href="/auth/discogs/authorize">
-          Please connect your discogs account in order to synchronise your wantlist & collection.
-        </a>
-      </h2>
-      </b-col>
-    </b-row>
+
+    <!--<b-row v-if="!isLogged">-->
+      <!--<b-col>-->
+        <!--<h2>-->
+          <!--<nuxt-link to="login">-->
+            <!--Please login to use our service-->
+          <!--</nuxt-link>-->
+        <!--</h2>-->
+      <!--</b-col>-->
+    <!--</b-row>-->
+
+    <!--<b-row v-if="isLogged && !hasDiscogs">-->
+      <!--<b-col>-->
+        <!--<h2>-->
+          <!--<a href="/auth/discogs/authorize">-->
+
+          <!--</a>-->
+        <!--</h2>-->
+      <!--</b-col>-->
+    <!--</b-row>-->
 
 
+    <!--<b-row v-if="isLogged && hasDiscogs ">-->
+      <!--<b-col>-->
+        <!--&lt;!&ndash;<button v-if="getWantlist.length > 0" @click="clickButton()" style="display: block; width: 100%;">&ndash;&gt;-->
+        <!--&lt;!&ndash;Load&ndash;&gt;-->
+        <!--&lt;!&ndash;</button>&ndash;&gt;-->
 
-    <b-row v-if="isLogged && hasDiscogs ">
-      <b-col>
-        <!--<button v-if="getWantlist.length > 0" @click="clickButton()" style="display: block; width: 100%;">-->
-          <!--Load-->
-        <!--</button>-->
+        <!--<h2 v-if="getWantlist.length <= 0" @click="generatePlaylist()">-->
+          <!---->
+        <!--</h2>-->
 
-        <h2 v-if="getWantlist.length <= 0" @click="generatePlaylist()">
-          Everything's ready, generate my playlist please
-        </h2>
+        <!--<ul>-->
 
-        <ul>
+          <!--<li v-for="video in getWantlist">-->
+            <!--{{ video.name}}-->
+          <!--</li>-->
+        <!--</ul>-->
 
-          <li v-for="video in getWantlist">
-            {{ video.name}}
-          </li>
-        </ul>
+      <!--</b-col>-->
 
-      </b-col>
+      <!--<b-col>-->
+      <!--</b-col>-->
+    <!--</b-row>-->
 
-      <b-col>
-      </b-col>
-    </b-row>
+
   </b-container>
 
 
 </template>
 
+<style lang="scss">
+
+  section#presentation {
+    background: #87509C;
+    /*padding: 150px;*/
+    padding-top: 150px;
+    width: 100%;
+    height: 100vh;
+    color: #fff;
+
+    .row, .container-fluid {
+      height: 100%;
+    }
+
+    h1 {
+      font-weight: 300;
+    }
+
+    h2 {
+      font-weight: 200;
+      font-size: 1.5rem;
+      position: relative;
+      &:after {
+        content: '';
+        display: block;
+        background: #fff;
+        height: 1px;
+        width: 20px;
+        margin: 16px auto 0;
+      }
+    }
+
+    .btn-primary {
+      text-transform: uppercase;
+      background: #EB7D4B;
+      border: none;
+      padding: 10px 60px;
+      display: inline-block;
+      margin-top: 40px;
+      font-size: 0.8rem;
+      border-bottom: 2px solid #C86A40;
+      border-radius: 3px;
+      outline: 0;
+    }
+
+    .player{
+      width: 100%;
+      height: 100%;
+    }
+  }
+</style>
+
+
 <script>
-  import Logo from '~/components/Logo.vue'
   import {mapGetters} from 'vuex'
   import youtubeExtract from "@/mixins/extract-youtube-id";
+  import Player from '~/components/Player/Player.vue'
 
 
   export default {
     components: {
-      Logo,
+      Player
     },
     mixins: [youtubeExtract],
     sockets: {
@@ -68,7 +194,6 @@
       updatePlaylist: function (data) {
         this.$store.commit('wantlist/add', data)
       }
-
 
 
     },
@@ -196,9 +321,9 @@
         // $socket is socket.io-client instance
 
       },
-      generatePlaylist(){
+      generatePlaylist() {
 
-      this.$socket.emit('get_wantlist')
+        this.$socket.emit('get_wantlist')
 
 
         // if (this.$store.state.user.discogs === true) {
@@ -243,62 +368,9 @@
       ...mapGetters({
         isLogged: 'user/isLogged',
         hasDiscogs: 'user/hasDiscogs',
-        getWantlist: 'wantlist/getWantlist',
+        wantlist: 'wantlist/getWantlist',
       })
     }
   }
 </script>
 
-<style>
-
-  .container {
-    min-height: calc(100vh - 56px);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-  }
-
-  .title, a.title {
-    font-family: 'Quicksand', 'Source Sans Pro', -apple-system, BlinkMacSystemFont,
-    'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-    display: block;
-    font-weight: 300;
-    font-size: 100px;
-    color: #35495e;
-    letter-spacing: 1px;
-  }
-
-  .subtitle, .subtitle a {
-    font-weight: 300;
-    font-size: 42px;
-    color: #526488;
-    word-spacing: 5px;
-    text-decoration: none;
-    padding-bottom: 15px;
-  }
-
-  .links {
-    padding-top: 15px;
-  }
-
-  .playlist {
-    width: 80%;
-
-  }
-
-  .videoWrapper {
-    position: relative;
-    padding-bottom: 56.25%; /* 16:9 */
-    padding-top: 25px;
-    height: 0;
-  }
-
-  .videoWrapper iframe {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-  }
-</style>
