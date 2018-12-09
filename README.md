@@ -1,9 +1,8 @@
 # discogs-playlist-generator
 
-WORK IN PROGRESS
+## Work in progress ...
 
-V1 soon come
-> Generate youtube playlists from your discogs account
+> Generate youtube playlist from your discogs wantlist
 
 ## Build Setup
 
