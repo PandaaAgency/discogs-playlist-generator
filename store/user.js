@@ -1,4 +1,3 @@
-
 const state = () => ({
   id: null,
   username: null,
@@ -7,11 +6,17 @@ const state = () => ({
 })
 
 const mutations = {
-  setUser (state, user) {
+  setUser(state, user) {
     state.id = user.id
     state.username = user.username
     state.email = user.email
     state.discogs = user.discogs
+  },
+  logout(state) {
+    state.id = null
+    state.username = null
+    state.email = null
+    state.discogs = false
   }
 }
 
@@ -22,7 +27,7 @@ const getters = {
 
 const actions = {
   // nuxtServerInit is called by Nuxt.js before server-rendering every page
-  init ({ commit }, req) {
+  init({commit}, req) {
     if (req.session.user) {
       commit('setUser', req.session.user)
     }

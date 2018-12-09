@@ -6,7 +6,9 @@
 
       <section id="presentation">
         <b-container fluid>
+
           <!-- offline -->
+          <transition name="fade">
           <b-row
             class="text-center "
             v-if="!isLogged"
@@ -26,6 +28,7 @@
               </b-button>
             </b-col>
           </b-row>
+          </transition>
 
           <!-- no discogs linked -->
           <b-row
@@ -49,6 +52,7 @@
           </b-row>
 
           <!-- Let's go -->
+          <transition name="fade">
           <b-row
             class="text-center"
             v-if="wantlist.length <= 0"
@@ -75,7 +79,9 @@
               </ul>
             </b-col>
           </b-row>
+          </transition>
 
+          <transition name="fade">
           <!-- playlist part, @todo component -->
           <b-row
             class="text-center"
@@ -84,6 +90,7 @@
             <player/>
           </b-row>
 
+          </transition>
         </b-container>
       </section>
     </b-row>
@@ -93,6 +100,13 @@
 </template>
 
 <style lang="scss">
+
+  .fade-enter-active, .fade-leave-active {
+    transition: opacity .5s;
+  }
+  .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+    opacity: 0;
+  }
 
   section#presentation {
     background: #87509C;

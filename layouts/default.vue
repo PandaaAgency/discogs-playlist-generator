@@ -33,7 +33,7 @@
             <template slot="button-content">
               <span>Hello {{ user.username }}</span>
             </template>
-            <b-dropdown-item href="/auth/logout">Logout</b-dropdown-item>
+            <b-dropdown-item @click="logout">Logout</b-dropdown-item>
           </b-nav-item-dropdown>
         </b-navbar-nav>
 
@@ -89,6 +89,13 @@ export default {
   components: {
     LoginModal,
     RegisterModal
+  },
+  methods: {
+    logout(){
+      this.$store.commit('user/logout')
+      this.$store.commit('wantlist/setPlaylist', [])
+      window.location.href = "/auth/logout"
+    }
   },
   computed: {
     ...mapState({
