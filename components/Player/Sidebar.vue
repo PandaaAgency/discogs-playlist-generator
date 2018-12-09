@@ -1,6 +1,5 @@
 <template>
-  <section class="player-sidebar">
-    <b-col md="3">
+    <b-col md="3" class="player-sidebar">
       <vue2-scroll-bar
         classes="scrollbar"
         ref="Scrollbar">
@@ -12,14 +11,10 @@
         </aside>
       </vue2-scroll-bar>
     </b-col>
-  </section>
 </template>
 
 <style lang="scss">
   .player-sidebar {
-
-    height: 100%;
-    > div {
       height: 100%;
       padding: 0;
       border-top: 2px solid #643A79;
@@ -27,8 +22,6 @@
       .scrollbar {
         height: 100%;
       }
-
-    }
 
   }
 

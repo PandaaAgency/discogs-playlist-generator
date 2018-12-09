@@ -8,7 +8,7 @@
         class="align-items-center">
         <b-col>
           <img
-            src="https://img.youtube.com/vi/Mb_4KuAAE4E/0.jpg"
+            v-bind:src="getItemThumb()"
             :alt="item.name">
         </b-col>
         <b-col class="content">
@@ -48,6 +48,10 @@ export default {
         id = url
       }
       return id
+    },
+
+    getItemThumb(){
+      return `https://img.youtube.com/vi/${this.extractYoutubeId(this.item.videos[0].url)}/0.jpg`
     }
   },
   computed: {
@@ -64,6 +68,7 @@ export default {
   .sidebar-item {
     background: #87509C;
     padding-right: 10px;
+    border-bottom: 4px solid #643A79;
 
     a {
       color: #fff;

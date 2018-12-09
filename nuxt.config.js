@@ -39,6 +39,10 @@ module.exports = {
     '~/plugins/vue-snotify',
     '~/plugins/vue2-scrollbar',
     {
+      src: '~/plugins/vue-youtube-embed',
+      ssr: false
+    },
+    {
       src: '~/plugins/vue-socket-io',
       ssr: false
     }
@@ -79,6 +83,7 @@ module.exports = {
   ** Build configuration
   */
   build: {
+    vendor: []
     /*
     ** You can extend webpack config here
     */
